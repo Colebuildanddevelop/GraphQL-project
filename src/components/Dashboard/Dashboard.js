@@ -1,88 +1,82 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { useQuery } from 'urql';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMetrics } from '../hooks';
+import { useMeasurements } from '../hooks';
 
-const getMetricsQuery = `
-  query getMetrics {
-    getMetrics
+const retrieveMetrics = (state) => {
+  const { metrics } = state.metrics
+  return {
+    metrics
   }
-`
-const getMultipleMeasurementsQuery = `
-  query($input: [MeasurementQuery]) {
-    getMultipleMeasurements(input: $input) {
-      metric
-      measurements {
-        at
-        value
-        metric
-        unit
-      }
-    }
+} 
+
+const retrieveMeasurements = (state) => {
+  const { measurements } = state.measurements
+ 
+  return {
+    measurements
   }
-`
+} 
 
 const Dashboard = () => {
   const [state, setState] = useState({
-    metrics: [],
-    selectedMetrics: [],
+    metricOptions: [],
+    selectedMetrics: [''],
     measurementQuery: []
   })
-  
-  const [metricResult] = useQuery({
-    query: getMetricsQuery
-  })
+  useMetrics();
+  useMeasurements(state.selectedMetrics)
+  const metricState = useSelector(retrieveMetrics)
+  const measurementsState = useSelector(retrieveMeasurements)
+  // format select options Obj
+  useEffect(() => { 
+    let metricOptions = []
+    metricState.metrics.map((metric) => {
+      metricOptions.push({
+        label: metric,
+        value: metric
+      })
+    })    
+    setState(state => ({
+      ...state,
+      metricOptions: metricOptions
+    }))
+  }, [metricState])
 
-  let thirtyMinutesAgo = new Date() - 30*60000;  
-  const [measurementResult] = useQuery(
-    {
-      query: getMultipleMeasurementsQuery,
-      variables: {
-        input: state.selectedMetrics.map(metric => ({
-          metricName: metric.value,
-          after: thirtyMinutesAgo
-        }))
+  // track selected metrics
+  const handleChange = (e) => {
+    console.log(e)
+    let selectedMetrics = [];
+    if (e !== null) {
+      for (let i=0; i<e.length; i++) {
+        selectedMetrics.push(e[i].value)
       }
-    },
-  );  
-
-  useEffect(() => {
-    if (metricResult.data !== undefined) {
-      let metrics = []  
-      for (let i=0; i<metricResult.data.getMetrics.length; i++) {
-        metrics.push({
-          value: metricResult.data.getMetrics[i],
-          label: metricResult.data.getMetrics[i],
-        })
-      }
+      console.log(selectedMetrics)
+      setState(state => ({
+         ...state,
+         selectedMetrics: selectedMetrics
+      }))
+    } else {
       setState(state => ({
         ...state,
-        metrics: metrics
-      }))
+        selectedMetrics: ['']
+     }))
     }
-  }, [metricResult])
-
-  
-  // fetch graph data for selected metric(s)
-  const handleChange = (e) => {
-    console.log(e) 
-    setState(state => ({
-       ...state,
-       selectedMetrics: e
-    }))
   }
-
-
+  
   return (
     <div>
-      <button onClick={() => console.log(measurementResult)}>state</button>  
+      <button onClick={() => console.log(measurementsState)}>state</button>  
       <Select
         isMulti
         name="colors"
-        options={state.metrics}
+        options={state.metricOptions}
         onChange={handleChange}
       />
     </div>  
   )
 }
-
+  
 export default Dashboard;
