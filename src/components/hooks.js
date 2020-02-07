@@ -17,7 +17,6 @@ const getMultipleMeasurementsQuery = `
       measurements {
         at
         value
-        metric
         unit
       }
     }
@@ -41,6 +40,7 @@ export const useMetrics = () => {
     const { getMetrics } = data
     dispatch(metricActions.metricsReceived({metrics: getMetrics}));
   }, [dispatch, data, error])  
+  return null
 }
 
 export const useMeasurements = (metrics) => {
