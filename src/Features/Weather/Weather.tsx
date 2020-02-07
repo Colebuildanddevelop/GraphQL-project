@@ -67,5 +67,5 @@ const Weather = () => {
 
   if (fetching) return <LinearProgress />;
 
-  return <Chip label={`Weather in ${locationName}: ${description} and ${temperatureinFahrenheit}°`} />;
+  return <Chip style={{backgroundColor: '#fafafa'}} label={`Weather in ${locationName}: ${description} and ${temperatureinFahrenheit}°`} />;
 };

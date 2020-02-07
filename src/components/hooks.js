@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useQuery } from 'urql';
+import { useQuery, useSubscription } from 'urql';
 import gql from 'graphql-tag';
 
 import { actions as metricActions} from '../Features/Metrics/reducer';
 import { actions as measurementActions} from '../Features/Measurements/reducer';
+import { actions as subscriptionActions} from '../Features/Subscriptions/reducer';
 
 
 const getMetricsQuery = gql`
@@ -24,6 +25,17 @@ const getMultipleMeasurementsQuery = gql`
     }
   }
 `
+const newMessages = `
+  subscription newMeasurement {
+    newMeasurement {
+      metric
+      at
+      value
+      unit
+    }
+  }
+`;
+
 
 export const useMetrics = () => {  
   const dispatch = useDispatch();
@@ -66,10 +78,29 @@ export const useMeasurements = (metrics) => {
       return;
     }
     if (!data) {
-      return
+      return;
     }
-    const { getMultipleMeasurements } = data
+    const { getMultipleMeasurements } = data;
     dispatch(measurementActions.measurementsReceived({measurements: getMultipleMeasurements}));
   }, [dispatch, data, error])  
-  return null 
+  return null;
+}
+
+export const useLatestMeasurements = () => {
+  const dispatch = useDispatch();
+  const [res] = useSubscription({ query: newMessages });  
+
+  useEffect(() => {
+    if (res.error) {
+      let error = res.error;
+      dispatch(subscriptionActions.latestMeasurementsApiErrorReceived({ error: error}))
+    }
+    if (!res.data) {
+      return;
+    }
+    const data = res.data 
+    
+    dispatch(subscriptionActions.latestMeasurementsReceived({ latestMeasurements: data }))
+  }, [res])
+  return null
 }

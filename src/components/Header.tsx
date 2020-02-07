@@ -5,11 +5,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { makeStyles } from '@material-ui/core/styles';
 import Weather from '../Features/Weather/Weather';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
   },
-});
+  toolBar: {
+    color: theme.palette.primary.main
+  }
+}));
 
 export default () => {
   const classes = useStyles();

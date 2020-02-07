@@ -10,18 +10,35 @@ import Wrapper from './components/Wrapper';
 import Dashboard from './components/Dashboard/Dashboard';
 import {
   Provider as UrqlProvider,
-  createClient
+  createClient,
+  defaultExchanges,
+  subscriptionExchange
 } from 'urql';
+import { SubscriptionClient } from "subscriptions-transport-ws";
+
+const subscriptionClient = new SubscriptionClient(
+  `wss://react.eogresources.com/graphql`,
+  {
+    reconnect: true,
+    timeout: 20000
+  }
+);
 
 const client = createClient({
-  url: "https://react.eogresources.com/graphql"
+  url: "https://react.eogresources.com/graphql",
+  exchanges: [
+    ...defaultExchanges,
+    subscriptionExchange({
+      forwardSubscription: operation => subscriptionClient.request(operation)      
+    }),
+  ],
 })
 
 const store = createStore();
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: 'rgb(39,49,66)',
+      main: '#00b0ff',
     },
     secondary: {
       main: 'rgb(197,208,222)',

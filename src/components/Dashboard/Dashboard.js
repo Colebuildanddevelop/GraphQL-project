@@ -1,127 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
-import { useQuery } from 'urql';
-import { useDispatch, useSelector } from 'react-redux';
-import { useMetrics } from '../hooks';
-import { useMeasurements } from '../hooks';
-import { TimeSeries, TimeRange } from "pondjs";
+import { useSelector } from 'react-redux';
 import {
-  Charts,
-  ChartContainer,
-  ChartRow,
-  YAxis,
-  LineChart,
-  Resizable,
-  styler
-} from "react-timeseries-charts";
+  useMetrics,
+  useMeasurements,
+  useLatestMeasurements
+} from '../hooks';
+import { TimeSeries, TimeRange } from "pondjs";
+// COMPONENTS
+import Chart from './Chart';
+import MyTable from './Table';
 // MATERIAL-UI
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
-/*
- * @param {*} props 
- *  - series1
- */
-const Chart = (props) => {
-  const [state, setState] = useState({
-    tracker: null,
-    trackerInfo: []
-  })
-  const colors = [
-    'red',
-    'blue',
-    'green',
-    'purple',
-    'brown',
-    'yellow',    
-  ]
-  const range = new TimeRange(new Date() - 30*60000, new Date().getTime())
-  const onTrackerChanged = t => {
-    setState(state => ({
-      ...state,
-      tracker: t
-    }))
-    if (!t) {
-      setState(state => ({
-        ...state,
-        trackerInfo: []
-      }))      
-    } else {
-      setState(state => ({
-        ...state,
-        trackerInfo: props.timeSeriesList.map((series) => {
-          const i = series.bisect(new Date(t))
-          console.log(i)
-          if (i !== undefined) {
-            return {
-              label: series.name(),
-              value: series.at(i).get('value').toString()
-            }
-          } else {
-            return {
-              label: series.name(),
-            } 
-          }
 
-        })  
-      }))      
-    }
+const useStyles = makeStyles(theme => ({
+  card: {
+
   }
-
-  if (props.timeSeriesList !== undefined) {
-    return (
-      <Resizable>
-        <ChartContainer
-          timeRange={range} 
-          onTrackerChanged={onTrackerChanged}
-          trackerPosition={state.tracker}
-        >
-          <ChartRow 
-            height={500}
-            trackerShowTime={true}
-            trackerInfoValues={state.trackerInfo}
-            trackerInfoHeight={10 + state.trackerInfo.length * 16}
-            trackerInfoWidth={140}            
-          >
-            {props.axisData.map((data, i) =>                         
-              <YAxis 
-                key={i}
-                id={`${i}`}
-                label={data.id}
-                min={data.min} 
-                max={data.max} 
-                width="60" 
-                type="linear" 
-              />
-            )}                                      
-            <Charts>
-              {props.timeSeriesList.map((series, i) => {
-                const style = styler(
-                  props.timeSeriesList.map(s => ({
-                    key: "value",
-                    color: colors[i]
-                  }))
-                )
-                return (
-                  <LineChart
-                    key={i}
-                    axis={`${i}`} 
-                    series={series} 
-                    style={style}
-                    column={["value"]}
-
-                  />
-                )
-              })}
-            </Charts>
-          </ChartRow>
-        </ChartContainer>
-      </Resizable>
-    )
-  } else {
-    return <p>select a metric</p>
-  }
-
-}
+}));
 
 const retrieveMetrics = (state) => {
   const { metrics } = state.metrics
@@ -136,6 +36,13 @@ const retrieveMeasurements = (state) => {
   }
 } 
 
+const retrieveLatestMeasurements = (state) => {
+  const { latestMeasurements } = state.latestMeasurements
+  return {
+    latestMeasurements
+  }
+}
+
 const Dashboard = () => {
   const [state, setState] = useState({
     metricOptions: [],
@@ -145,10 +52,15 @@ const Dashboard = () => {
     axisData: null,
     showChart: false
   })
+  const [subscriptionState, setSubscriptionState] = useState(null)
+  // hooks to dispatch
   useMetrics();
   useMeasurements(state.selectedMetrics)
+  useLatestMeasurements()
+  // selectors to retrieve redux state 
   const metricState = useSelector(retrieveMetrics)
   const measurementsState = useSelector(retrieveMeasurements)
+  const subscription = useSelector(retrieveLatestMeasurements)
   // format select options Obj
   useEffect(() => { 
     let metricOptions = []
@@ -203,15 +115,30 @@ const Dashboard = () => {
     let trafficSeries = TimeSeries.timeSeriesListMerge({
       name: "metrics",
       seriesList: timeSeriesList
-    })
-    
+    })    
     setState(state => ({
       ...state,
       timeSeriesList: timeSeriesList,
       axisData: axisData,
       trafficSeries: trafficSeries
     }))
-  }, [metricState])
+  }, [measurementsState])
+
+  // for each metric selected get values from subscription
+  useEffect(() => {
+    if (subscription.latestMeasurements.newMeasurement !== undefined) {
+      const newMeasureName = subscription.latestMeasurements.newMeasurement.metric
+      const newMeasureVal = subscription.latestMeasurements.newMeasurement.value
+      for (let i=0; i<state.selectedMetrics.length; i++) {
+        if (newMeasureName === state.selectedMetrics[i]) {
+          setSubscriptionState(prevState => ({
+            ...prevState, 
+            [state.selectedMetrics[i]]: newMeasureVal
+          }))            
+        }
+      }
+    }
+  }, [subscription])
 
   // track selected metrics
   const handleChange = (e) => {
@@ -237,7 +164,7 @@ const Dashboard = () => {
   return (
     <div>
       <Grid container style={{marginTop: 50}}>
-        <Grid item xs={6} style={{marginBottom: 20, marginLeft: '50%', marginRight: 20}}>
+        <Grid item xs={6} style={{marginBottom: 20, marginRight: '50%', marginLeft: 20}}>
           <Select
             isMulti
             name="colors"
@@ -246,9 +173,16 @@ const Dashboard = () => {
           />
         </Grid>
         {state.showChart !== false &&
-          <Grid item xs={12} style={{marginRight: 20}}>
-            <Chart timeSeriesList={state.timeSeriesList} axisData={state.axisData} trafficSeries={state.trafficSeries}/>
-          </Grid>  
+          <React.Fragment>
+            <Grid item xs={9}>
+              <Chart timeSeriesList={state.timeSeriesList} axisData={state.axisData} trafficSeries={state.trafficSeries}/>
+            </Grid>  
+            {subscriptionState !== null &&
+              <Grid xs={3} style={{padding: 20}}>
+                <MyTable subscriptionState={subscriptionState}/>
+              </Grid>
+            }
+          </React.Fragment>
         }      
       </Grid>
     </div>  
