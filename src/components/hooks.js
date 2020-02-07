@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from 'urql';
+import gql from 'graphql-tag';
+
 import { actions as metricActions} from '../Features/Metrics/reducer';
 import { actions as measurementActions} from '../Features/Measurements/reducer';
 
 
-const getMetricsQuery = `
+const getMetricsQuery = gql`
   query getMetrics {
     getMetrics
   }
 `
-const getMultipleMeasurementsQuery = `
+const getMultipleMeasurementsQuery = gql`
   query($input: [MeasurementQuery]) {
     getMultipleMeasurements(input: $input) {
       metric

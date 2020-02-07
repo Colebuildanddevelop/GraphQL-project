@@ -27,7 +27,7 @@ const theme = createMuiTheme({
       main: 'rgb(197,208,222)',
     },
     background: {
-      default: 'rgb(226,231,238)',
+      default: '#fafafa',
     },
   },
 });

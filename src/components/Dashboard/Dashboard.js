@@ -11,41 +11,106 @@ import {
   ChartRow,
   YAxis,
   LineChart,
-  Resizable
+  Resizable,
+  styler
 } from "react-timeseries-charts";
-
+// MATERIAL-UI
+import Grid from '@material-ui/core/Grid';
 
 /*
  * @param {*} props 
  *  - series1
  */
 const Chart = (props) => {
+  const [state, setState] = useState({
+    tracker: null,
+    trackerInfo: []
+  })
+  const colors = [
+    'red',
+    'blue',
+    'green',
+    'purple',
+    'brown',
+    'yellow',    
+  ]
   const range = new TimeRange(new Date() - 30*60000, new Date().getTime())
-  console.log(props.timeSeriesList)
+  const onTrackerChanged = t => {
+    setState(state => ({
+      ...state,
+      tracker: t
+    }))
+    if (!t) {
+      setState(state => ({
+        ...state,
+        trackerInfo: []
+      }))      
+    } else {
+      setState(state => ({
+        ...state,
+        trackerInfo: props.timeSeriesList.map((series) => {
+          const i = series.bisect(new Date(t))
+          console.log(i)
+          if (i !== undefined) {
+            return {
+              label: series.name(),
+              value: series.at(i).get('value').toString()
+            }
+          } else {
+            return {
+              label: series.name(),
+            } 
+          }
+
+        })  
+      }))      
+    }
+  }
+
   if (props.timeSeriesList !== undefined) {
     return (
       <Resizable>
         <ChartContainer
           timeRange={range} 
-          
+          onTrackerChanged={onTrackerChanged}
+          trackerPosition={state.tracker}
         >
-          <ChartRow height="200">
+          <ChartRow 
+            height={500}
+            trackerShowTime={true}
+            trackerInfoValues={state.trackerInfo}
+            trackerInfoHeight={10 + state.trackerInfo.length * 16}
+            trackerInfoWidth={140}            
+          >
             {props.axisData.map((data, i) =>                         
               <YAxis 
+                key={i}
                 id={`${i}`}
-                label={data.label}
+                label={data.id}
                 min={data.min} 
                 max={data.max} 
                 width="60" 
                 type="linear" 
-                format="$,.2f"
               />
-            )}              
-                        
+            )}                                      
             <Charts>
               {props.timeSeriesList.map((series, i) => {
-                console.log(i)
-                return <LineChart axis={`${i}`} series={series} />
+                const style = styler(
+                  props.timeSeriesList.map(s => ({
+                    key: "value",
+                    color: colors[i]
+                  }))
+                )
+                return (
+                  <LineChart
+                    key={i}
+                    axis={`${i}`} 
+                    series={series} 
+                    style={style}
+                    column={["value"]}
+
+                  />
+                )
               })}
             </Charts>
           </ChartRow>
@@ -58,14 +123,12 @@ const Chart = (props) => {
 
 }
 
-
 const retrieveMetrics = (state) => {
   const { metrics } = state.metrics
   return {
     metrics
   }
 } 
-
 const retrieveMeasurements = (state) => {
   const { measurements } = state.measurements
   return {
@@ -73,15 +136,14 @@ const retrieveMeasurements = (state) => {
   }
 } 
 
-
-
 const Dashboard = () => {
   const [state, setState] = useState({
     metricOptions: [],
     selectedMetrics: [''],
     measurementQuery: [],
     trafficSeries: null,
-    axisData: null
+    axisData: null,
+    showChart: false
   })
   useMetrics();
   useMeasurements(state.selectedMetrics)
@@ -138,10 +200,16 @@ const Dashboard = () => {
     let timeSeriesList = formattedData.map((data) => {
       return new TimeSeries(data)
     })
+    let trafficSeries = TimeSeries.timeSeriesListMerge({
+      name: "metrics",
+      seriesList: timeSeriesList
+    })
+    
     setState(state => ({
       ...state,
       timeSeriesList: timeSeriesList,
-      axisData: axisData
+      axisData: axisData,
+      trafficSeries: trafficSeries
     }))
   }, [metricState])
 
@@ -153,30 +221,36 @@ const Dashboard = () => {
       for (let i=0; i<e.length; i++) {
         selectedMetrics.push(e[i].value)
       }
-      console.log(selectedMetrics)
       setState(state => ({
          ...state,
+         showChart: true,
          selectedMetrics: selectedMetrics
       }))
     } else {
       setState(state => ({
         ...state,
+        showChart: false,
         selectedMetrics: ['']
      }))
     }
   }
   return (
     <div>
-      <button onClick={() => console.log(state)}>state</button>  
-      <Select
-        isMulti
-        name="colors"
-        options={state.metricOptions}
-        onChange={handleChange}
-      />
-      {(state.timeSeriesList !== null && state.axisData !== null) &&
-        <Chart timeSeriesList={state.timeSeriesList} axisData={state.axisData}/>
-      }
+      <Grid container style={{marginTop: 50}}>
+        <Grid item xs={6} style={{marginBottom: 20, marginLeft: '50%', marginRight: 20}}>
+          <Select
+            isMulti
+            name="colors"
+            options={state.metricOptions}
+            onChange={handleChange}
+          />
+        </Grid>
+        {state.showChart !== false &&
+          <Grid item xs={12} style={{marginRight: 20}}>
+            <Chart timeSeriesList={state.timeSeriesList} axisData={state.axisData} trafficSeries={state.trafficSeries}/>
+          </Grid>  
+        }      
+      </Grid>
     </div>  
   )
 }
