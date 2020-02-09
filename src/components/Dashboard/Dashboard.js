@@ -5,23 +5,22 @@ import {
   useMetrics,
   useMeasurements,
   useLatestMeasurements
-} from '../hooks';
-import { TimeSeries, TimeRange } from "pondjs";
+} from './hooks';
+import { TimeSeries } from "pondjs";
 // COMPONENTS
 import Chart from './Chart';
-import MyTable from './Table';
+import MyTable from './MyTable';
 // MATERIAL-UI
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 
-
-const useStyles = makeStyles(theme => ({
-  card: {
-
-  }
-}));
+const colors = [
+  'red',
+  'blue',
+  'green',
+  'purple',
+  'brown',
+  'yellow',    
+]  
 
 const retrieveMetrics = (state) => {
   const { metrics } = state.metrics
@@ -46,11 +45,8 @@ const retrieveLatestMeasurements = (state) => {
 const Dashboard = () => {
   const [state, setState] = useState({
     metricOptions: [],
-    selectedMetrics: [''],
-    measurementQuery: [],
-    trafficSeries: null,
+    selectedMetrics: [],
     axisData: null,
-    showChart: false
   })
   const [subscriptionState, setSubscriptionState] = useState(null)
   // hooks to dispatch
@@ -110,17 +106,13 @@ const Dashboard = () => {
       }
     })    
     let timeSeriesList = formattedData.map((data) => {
+
       return new TimeSeries(data)
     })
-    let trafficSeries = TimeSeries.timeSeriesListMerge({
-      name: "metrics",
-      seriesList: timeSeriesList
-    })    
     setState(state => ({
       ...state,
       timeSeriesList: timeSeriesList,
       axisData: axisData,
-      trafficSeries: trafficSeries
     }))
   }, [measurementsState])
 
@@ -130,10 +122,10 @@ const Dashboard = () => {
       const newMeasureName = subscription.latestMeasurements.newMeasurement.metric
       const newMeasureVal = subscription.latestMeasurements.newMeasurement.value
       for (let i=0; i<state.selectedMetrics.length; i++) {
-        if (newMeasureName === state.selectedMetrics[i]) {
+        if (newMeasureName === state.selectedMetrics[i].value) {
           setSubscriptionState(prevState => ({
             ...prevState, 
-            [state.selectedMetrics[i]]: newMeasureVal
+            [state.selectedMetrics[i].value]: newMeasureVal
           }))            
         }
       }
@@ -142,22 +134,22 @@ const Dashboard = () => {
 
   // track selected metrics
   const handleChange = (e) => {
-    console.log(e)
     let selectedMetrics = [];
     if (e !== null) {
       for (let i=0; i<e.length; i++) {
-        selectedMetrics.push(e[i].value)
+        selectedMetrics.push({
+          value: e[i].value,
+          color: colors[i]
+        })
       }
       setState(state => ({
          ...state,
-         showChart: true,
          selectedMetrics: selectedMetrics
       }))
     } else {
       setState(state => ({
         ...state,
-        showChart: false,
-        selectedMetrics: ['']
+        selectedMetrics: []
      }))
     }
   }
@@ -172,14 +164,14 @@ const Dashboard = () => {
             onChange={handleChange}
           />
         </Grid>
-        {state.showChart !== false &&
+        {state.selectedMetrics.length !== 0 &&
           <React.Fragment>
             <Grid item xs={9}>
-              <Chart timeSeriesList={state.timeSeriesList} axisData={state.axisData} trafficSeries={state.trafficSeries}/>
+              <Chart timeSeriesList={state.timeSeriesList} axisData={state.axisData} selectedMetrics={state.selectedMetrics}/>
             </Grid>  
             {subscriptionState !== null &&
-              <Grid xs={3} style={{padding: 20}}>
-                <MyTable subscriptionState={subscriptionState}/>
+              <Grid item xs={3} style={{padding: 20}}>
+                <MyTable subscriptionState={subscriptionState} selectedMetrics={state.selectedMetrics}/>
               </Grid>
             }
           </React.Fragment>
