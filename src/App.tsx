@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
 import Wrapper from './components/Wrapper';
 // COLES IMPORTS
-import Dashboard from './components/Dashboard/Dashboard';
+import Dashboard from './components/Dashboard';
 import {
   Provider as UrqlProvider,
   createClient,

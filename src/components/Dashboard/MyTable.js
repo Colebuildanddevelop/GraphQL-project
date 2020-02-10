@@ -22,7 +22,6 @@ const MyTable = (props) => {
       <TableHead>
         <TableRow>
           <TableCell>Metric Name</TableCell>
-          <TableCell align="right">Color</TableCell>
           <TableCell align="right">Value</TableCell>
         </TableRow>
       </TableHead>
@@ -31,10 +30,9 @@ const MyTable = (props) => {
           return (
             <Zoom in={true} timeout={750}>
               <TableRow key={metric.value}>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" style={{color: metric.color}}>
                   {metric.value}
                 </TableCell>   
-                <TableCell align="right" style={{color: metric.color}}>{metric.color}</TableCell>
                 <TableCell align="right">{props.subscriptionState[metric.value]}</TableCell>
               </TableRow>
             </Zoom>  

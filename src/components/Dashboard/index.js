@@ -106,7 +106,6 @@ const Dashboard = () => {
       }
     })    
     let timeSeriesList = formattedData.map((data) => {
-
       return new TimeSeries(data)
     })
     setState(state => ({
@@ -156,7 +155,7 @@ const Dashboard = () => {
   return (
     <div>
       <Grid container style={{marginTop: 50}}>
-        <Grid item xs={6} style={{marginBottom: 20, marginRight: '50%', marginLeft: 20}}>
+        <Grid item xs={12} md={6} style={{padding: 10, marginBottom: 20}}>
           <Select
             isMulti
             name="colors"
@@ -166,11 +165,11 @@ const Dashboard = () => {
         </Grid>
         {state.selectedMetrics.length !== 0 &&
           <React.Fragment>
-            <Grid item xs={9}>
+            <Grid item xs={12} md={9} style={{paddingRight: 20}}>
               <Chart timeSeriesList={state.timeSeriesList} axisData={state.axisData} selectedMetrics={state.selectedMetrics}/>
             </Grid>  
             {subscriptionState !== null &&
-              <Grid item xs={3} style={{padding: 20}}>
+              <Grid item xs={12} md={3} style={{padding: 20}}>
                 <MyTable subscriptionState={subscriptionState} selectedMetrics={state.selectedMetrics}/>
               </Grid>
             }
@@ -178,7 +177,7 @@ const Dashboard = () => {
         }      
       </Grid>
     </div>  
-  )
+  ) 
 }
 
   
