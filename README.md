@@ -99,7 +99,7 @@ I believe displaying metric data and chart colors in a material ui table is a go
 
 Dear EOG Resources,
 
-When I first read Jesse's welcoming statement for the assisgnment I was immediately struck with excitement for two reasons. One, for having the chance to prove my skills in a more realistic setting and two, for getting the opportunity to work and learn from those who understand and are unafraid of optimizing processes. Thank you for taking the time to review my assessment. I look forward to hearing any feedback and discussing how I can be an example of the value gained from your optimal hiring methods. 
+When I first read Jesse's welcoming statement for the assisgnment I was immediately struck with excitement for two reasons. One, for the chance to prove my skills in a more realistic setting and two, for the opportunity to work for those who understand and are unafraid of optimizing processes. Thank you for taking the time to review my assessment. I look forward to hearing any feedback and discussing how I can be an example of the value gained from your optimal hiring methods. 
 
 ---
 
