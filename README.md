@@ -46,7 +46,8 @@ Charting behaves like you would expect
 
 Good Git/GitHub Practices
 
-- A- , however I feel I could do better in terms of meaningful more file specific commits.
+- A-
+  however I feel I could do better in terms of meaningful more file specific commits.
 
 You use and run our getting started code
 
