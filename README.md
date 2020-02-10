@@ -47,7 +47,6 @@ Read more about this assessment [here](https://react.eogresources.com)
 **Good Git/GitHub Practices**
 
 - A-  
-
 I could improve in terms of meaningful, more file specific commits.
 
 **You use and run our getting started code**
@@ -65,13 +64,11 @@ I could improve in terms of meaningful, more file specific commits.
 **Runs free of console warnings** 
 
 - B+  
-
 Some of the charting packages I am using have warnings.
 
 **Handling Errors**
 
 - A+  
-
 Toast errors using redux-sagas.
 
 **Use Redux**
@@ -89,13 +86,11 @@ Toast errors using redux-sagas.
 **TypeScript**
 
 - B  
-
 I continued the typescript format with the redux store, reducers, and sagas however, wrote my Dashboard components in JavaScript.
 
 **Creativity**
 
 - A-  
-
 I believe displaying metric data and chart colors in a material ui table is a good design decision. 
 
 ---
@@ -104,7 +99,7 @@ I believe displaying metric data and chart colors in a material ui table is a go
 
 Dear EOG Resources,
 
-Thank you for being an industry leader in regards to the hiring process. I could not agree more with Jesse's welcoming statement, and it excites me to have the opportunity to prove my skills to an organization that operates so fairly. I look forward to hearing any feedback and to proving to EOG that I can be an example of the value gained from optimizing hiring methods. 
+When I first read Jesse's welcoming statement for the assisgnment I was immediately struck with excitement for two reasons. One, for having the chance to prove my skills in a more realistic setting and two, for getting the opportunity to work and learn from those who understand and are unafraid of optimizing processes. Thank you for taking the time to review my assessment. I look forward to hearing any feedback and discussing how I can be an example of the value gained from your optimal hiring methods. 
 
 ---
 
