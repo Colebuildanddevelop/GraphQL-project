@@ -20,22 +20,24 @@ const MyTable = (props) => {
   return (
     <Table className={classes.table}>
       <TableHead>
-        <TableRow>
-          <TableCell>Metric Name</TableCell>
-          <TableCell align="right">Value</TableCell>
+        <TableRow key={'tableTitles'}>
+          <TableCell key={'tableTitles1'} >Metric Name</TableCell>
+          <TableCell key={'tableTitles2'} align="right">Value</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {props.selectedMetrics.map((metric) => {          
           return (
-            <Zoom in={true} timeout={750}>
-              <TableRow key={metric.value}>
-                <TableCell component="th" scope="row" style={{color: metric.color}}>
-                  {metric.value}
-                </TableCell>   
-                <TableCell align="right">{props.subscriptionState[metric.value]}</TableCell>
-              </TableRow>
-            </Zoom>  
+            <React.Fragment key={metric.value}>
+              <Zoom in={true} timeout={750}>
+                <TableRow key={`${metric.value}0`}>
+                  <TableCell key={`${metric.value}1`} component="th" scope="row" style={{color: metric.color}}>
+                    {metric.value}
+                  </TableCell>   
+                  <TableCell key={`${metric.value}2`} align="right">{props.subscriptionState[metric.value]}</TableCell>
+                </TableRow>
+              </Zoom>  
+            </React.Fragment>
           )
         })}      
       </TableBody>

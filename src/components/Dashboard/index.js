@@ -23,20 +23,20 @@ const colors = [
 ]  
 
 const retrieveMetrics = (state) => {
-  const { metrics } = state.metrics
+  const { metrics } = state.metrics;
   return {
     metrics
   }
 } 
 const retrieveMeasurements = (state) => {
-  const { measurements } = state.measurements
+  const { measurements } = state.measurements;
   return {
     measurements
   }
 } 
 
 const retrieveLatestMeasurements = (state) => {
-  const { latestMeasurements } = state.latestMeasurements
+  const { latestMeasurements } = state.latestMeasurements;
   return {
     latestMeasurements
   }
@@ -48,78 +48,82 @@ const Dashboard = () => {
     selectedMetrics: [],
     axisData: null,
   })
-  const [subscriptionState, setSubscriptionState] = useState(null)
+  const [subscriptionState, setSubscriptionState] = useState(null);
   // hooks to dispatch
   useMetrics();
-  useMeasurements(state.selectedMetrics)
-  useLatestMeasurements()
+  useMeasurements(state.selectedMetrics);
+  useLatestMeasurements();
   // selectors to retrieve redux state 
-  const metricState = useSelector(retrieveMetrics)
-  const measurementsState = useSelector(retrieveMeasurements)
-  const subscription = useSelector(retrieveLatestMeasurements)
+  const metricState = useSelector(retrieveMetrics);
+  const measurementsState = useSelector(retrieveMeasurements);
+  const subscription = useSelector(retrieveLatestMeasurements);
   // format select options Obj
   useEffect(() => { 
-    let metricOptions = []
+    let metricOptions = [];
     metricState.metrics.map((metric) => {
       metricOptions.push({
         label: metric,
         value: metric
       })
+      return null;
     })    
     setState(state => ({
       ...state,
       metricOptions: metricOptions
     }))
+    
   }, [metricState])
 
   // format data to timeseries
   useEffect(() => {
-    let formattedData = []
-    let axisData = []
+    let formattedData = [];
+    let axisData = [];
     // for each measurement
     measurementsState.measurements.map((measurement) => {
       if (measurement.measurements !== undefined) {
         // push series data
-        let values = []
-        let points = []
+        let values = [];
+        let points = [];
         measurement.measurements.map((obj) => {
-          points.push([obj.at, obj.value])
-          values.push(obj.value)
-        })
+          points.push([obj.at, obj.value]);
+          values.push(obj.value);
+          return null;
+        });
         formattedData.push({
           name: measurement.metric,
           columns: ["time", "value"],
           points: points
-        })
+        });
         let min = 0;
         let max = 1000
         if (values.length > 0) {
-          min = Math.min(...values)
-          max = Math.max(...values)   
+          min = Math.min(...values);
+          max = Math.max(...values);
         }
-
         axisData.push({
           id: measurement.metric,
           min: min,
           max: max         
-        })
+        });
       }
-    })    
+      return null;
+    });    
     let timeSeriesList = formattedData.map((data) => {
       return new TimeSeries(data)
-    })
+    });
     setState(state => ({
       ...state,
       timeSeriesList: timeSeriesList,
       axisData: axisData,
-    }))
-  }, [measurementsState])
+    }));
+    
+  }, [measurementsState]);
 
   // for each metric selected get values from subscription
   useEffect(() => {
     if (subscription.latestMeasurements.newMeasurement !== undefined) {
-      const newMeasureName = subscription.latestMeasurements.newMeasurement.metric
-      const newMeasureVal = subscription.latestMeasurements.newMeasurement.value
+      const newMeasureName = subscription.latestMeasurements.newMeasurement.metric;
+      const newMeasureVal = subscription.latestMeasurements.newMeasurement.value;
       for (let i=0; i<state.selectedMetrics.length; i++) {
         if (newMeasureName === state.selectedMetrics[i].value) {
           setSubscriptionState(prevState => ({
@@ -129,7 +133,8 @@ const Dashboard = () => {
         }
       }
     }
-  }, [subscription])
+    
+  }, [subscription, state.selectedMetrics]);
 
   // track selected metrics
   const handleChange = (e) => {
