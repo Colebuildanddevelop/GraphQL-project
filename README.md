@@ -36,67 +36,67 @@ Read more about this assessment [here](https://react.eogresources.com)
 
 ## Personal Assessment
 
-Metric List and Values
+**Metric List and Values**
 
 - A+ 
 
-Charting behaves like you would expect
+**Charting behaves like you would expect**
 
 - A+
 
-Good Git/GitHub Practices
+**Good Git/GitHub Practices**
 
 - A-  
 
-- I could improve in terms of meaningful, more file specific commits.
+I could improve in terms of meaningful, more file specific commits.
 
-You use and run our getting started code
+**You use and run our getting started code**
 
 - A+
 
-Coding Standards
+**Coding Standards**
 
 - A+ 
 
-Use React Hooks
+**Use React Hooks**
 
 - A+
 
-Runs free of console warnings 
+**Runs free of console warnings** 
 
 - B+  
 
-- Some of the charting packages I am using have warnings.
+Some of the charting packages I am using have warnings.
 
-Handling Errors
+**Handling Errors**
 
 - A+  
 
-- Toast errors using redux-sagas.
+Toast errors using redux-sagas.
 
-Use Redux
-
-- A+
-
-Use Prettier
+**Use Redux**
 
 - A+
 
-GraphQl Subscriptions
+**Use Prettier**
 
 - A+
 
-TypeScript
+**GraphQl Subscriptions**
+
+- A+
+
+**TypeScript**
 
 - B  
 
-- I continued the typescript format with the redux store, reducers, and sagas however, wrote my Dashboard components in JavaScript.
+I continued the typescript format with the redux store, reducers, and sagas however, wrote my Dashboard components in JavaScript.
 
-Creativity
+**Creativity**
 
 - A-  
 
-- I believe displaying metric data and chart colors in a material ui table is a good design decision. 
+I believe displaying metric data and chart colors in a material ui table is a good design decision. 
 
 ---
 
