@@ -18,23 +18,25 @@ Read more about this assessment [here](https://react.eogresources.com)
 
 > Select Metrics fetched from the GraphQl API.
 
-![select](https://github.com/Colebuildanddevelop/friendswithvids/blob/master/src/static/select.gif)
+![select](https://github.com/Colebuildanddevelop/GraphQL-project/blob/master/src/static/select.gif)
 
 > Chart selected metrics in realtime 
 
-![chart](https://github.com/Colebuildanddevelop/friendswithvids/blob/master/src/static/chart.gif)
+![chart](https://github.com/Colebuildanddevelop/GraphQL-project/blob/master/src/static/chart.gif)
 
 > Prominently Display Data
  
-![display](https://github.com/Colebuildanddevelop/friendswithvids/blob/master/src/static/display.gif)
+![display](https://github.com/Colebuildanddevelop/GraphQL-project/blob/master/src/static/display.gif)
 
 > Responsive Design
 
-![responsive](https://github.com/Colebuildanddevelop/friendswithvids/blob/master/src/static/responsive.gif)
+![responsive](https://github.com/Colebuildanddevelop/GraphQL-project/blob/master/src/static/responsive.gif)
 
 ---
 
 ## Notes
+
+Dear EOG Resources,
 
 
 
