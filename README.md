@@ -16,7 +16,7 @@ Read more about this assessment [here](https://react.eogresources.com)
 
 ## Usage
 
-> Select Metrics fetched from the GraphQl API.
+> Select Metrics fetched from the GraphQL API.
 
 ![select](https://github.com/Colebuildanddevelop/GraphQL-project/blob/master/src/static/select.gif)
 
@@ -46,7 +46,9 @@ Charting behaves like you would expect
 
 Good Git/GitHub Practices
 
-- A-  I could improve in terms of meaningful more file specific commits.
+- A-  
+
+- I could improve in terms of meaningful, more file specific commits.
 
 You use and run our getting started code
 
@@ -62,11 +64,15 @@ Use React Hooks
 
 Runs free of console warnings 
 
-- B+  Some of the charting packages I am using have warnings.
+- B+  
+
+- Some of the charting packages I am using have warnings.
 
 Handling Errors
 
-- A+  Toast errors using redux-sagas.
+- A+  
+
+- Toast errors using redux-sagas.
 
 Use Redux
 
@@ -82,11 +88,15 @@ GraphQl Subscriptions
 
 TypeScript
 
-- B  I coninued the typescript format with the redux store, reducers, and sagas however wrote my Dashboard components in JavaScript.
+- B  
+
+- I continued the typescript format with the redux store, reducers, and sagas however, wrote my Dashboard components in JavaScript.
 
 Creativity
 
-- A-  I beleive displaying metric data and chart colors in a material ui table was a good design decision. 
+- A-  
+
+- I believe displaying metric data and chart colors in a material ui table is a good design decision. 
 
 ---
 
