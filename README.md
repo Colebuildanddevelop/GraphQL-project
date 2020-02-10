@@ -94,7 +94,7 @@ Creativity
 
 Dear EOG Resources,
 
-Thank you for being an industry leader in regards to the hiring process. I could not agree more with Jesse's welcoming statement. I hope you will enjoy reviewing my assessment and allow me to be an example of the value gained from optimizing hiring methods. 
+Thank you for being an industry leader in regards to the hiring process. I could not agree more with Jesse's welcoming statement, and it excites me to have the opportunity to prove my skills to an organization that operates so fairly. I look forward to hearing any feedback and to proving to EOG that I can be an example of the value gained from optimizing hiring methods. 
 
 ---
 
